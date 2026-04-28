@@ -11,7 +11,7 @@ export async function POST(request) {
     if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
+    console.log("SERVICE KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY);
     // Use service role to bypass RLS
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -109,3 +109,5 @@ export async function GET() {
     message: "Price check endpoint is working. Use POST to trigger.",
   });
 }
+
+// curl.exe -X POST https://dealdrop-store.vercel.app/api/cron/check-prices -H "Authorization: Bearer 35e70f46888013dffd5cda07263623f7d7c76d47b4ce191065d91491737c6516"
