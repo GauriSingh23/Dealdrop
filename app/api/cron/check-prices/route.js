@@ -11,7 +11,7 @@ export async function POST(request) {
     if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    console.log("SERVICE KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY);
+    
     // Use service role to bypass RLS
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
