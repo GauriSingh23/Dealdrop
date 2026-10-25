@@ -23,7 +23,7 @@ export async function addProduct(formData) {
     }
 
     console.log("Scraping URL:", url);
-    console.log("Using firecrawl key:", process.env.FIRECRAWL_API_KEY);
+    
 
     const productData = await scrapeProduct(url);
 
@@ -99,6 +99,40 @@ export async function deleteProduct(productId) {
       .from("products")
       .delete()
       .eq("id", productId);
+
+    if (error) throw error;
+
+    revalidatePath("/");
+    return { success: true };
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
+export async function updateTargetPrice(productId, targetPrice) {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { error: "Not authenticated" };
+    }
+
+    let value = null;
+    if (targetPrice !== "" && targetPrice !== null && targetPrice !== undefined) {
+      value = parseFloat(targetPrice);
+      if (isNaN(value) || value <= 0) {
+        return { error: "Enter a valid target price" };
+      }
+    }
+
+    const { error } = await supabase
+      .from("products")
+      .update({ target_price: value })
+      .eq("id", productId)
+      .eq("user_id", user.id);
 
     if (error) throw error;
 

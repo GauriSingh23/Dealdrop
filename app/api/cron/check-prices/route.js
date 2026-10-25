@@ -11,7 +11,7 @@ export async function POST(request) {
     if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-    
+
     // Use service role to bypass RLS
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -66,7 +66,13 @@ export async function POST(request) {
 
           results.priceChanges++;
 
-          if (newPrice < oldPrice) {
+          const hasTarget =
+            product.target_price !== null && product.target_price !== undefined;
+          const shouldAlert =
+            newPrice < oldPrice &&
+            (!hasTarget || newPrice <= parseFloat(product.target_price));
+
+          if (shouldAlert) {
             const {
               data: { user },
             } = await supabase.auth.admin.getUserById(product.user_id);
@@ -110,4 +116,3 @@ export async function GET() {
   });
 }
 
-// curl.exe -X POST https://dealdrop-store.vercel.app/api/cron/check-prices -H "Authorization: Bearer 35e70f46888013dffd5cda07263623f7d7c76d47b4ce191065d91491737c6516"

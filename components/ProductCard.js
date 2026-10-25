@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { deleteProduct } from "@/app/actions";
+import { deleteProduct, updateTargetPrice } from "@/app/actions";
 import PriceChart from "./PriceChart";
 import {
   Card,
@@ -17,12 +17,17 @@ import {
   TrendingDown,
   ChevronDown,
   ChevronUp,
+  Target,
 } from "lucide-react";
 import Link from "next/link";
 
 export default function ProductCard({ product }) {
   const [showChart, setShowChart] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [target, setTarget] = useState(product.target_price ?? "");
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState("");
+  const [showTarget, setShowTarget] = useState(false);
 
   const handleDelete = async () => {
     if (!confirm("Remove this product from tracking?")) return;
@@ -30,6 +35,20 @@ export default function ProductCard({ product }) {
     setDeleting(true);
     await deleteProduct(product.id);
   };
+
+  const handleSaveTarget = async () => {
+  setSaving(true);
+  setMsg("");
+  const res = await updateTargetPrice(product.id, target);
+  setSaving(false);
+
+  if (res?.error) {
+    setMsg(res.error);
+    return;
+  }
+
+  setShowTarget(false);
+};
 
   return (
     <Card className="hover:shadow-lg transition-shadow">
@@ -83,6 +102,18 @@ export default function ProductCard({ product }) {
             )}
           </Button>
 
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowTarget(!showTarget)}
+            className="gap-1"
+          >
+            <Target className="w-4 h-4" />
+            {product.target_price
+              ? `Target: ${product.currency} ${product.target_price}`
+              : "Set Target"}
+          </Button>
+
           <Button variant="outline" size="sm" asChild className="gap-1">
             <Link href={product.url} target="_blank" rel="noopener noreferrer">
               <ExternalLink className="w-4 h-4" />
@@ -101,6 +132,36 @@ export default function ProductCard({ product }) {
             Remove
           </Button>
         </div>
+
+        {showTarget && (
+          <div className="mt-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min="0"
+                step="any"
+                value={target}
+                onChange={(e) => setTarget(e.target.value)}
+                placeholder="Target price"
+                className="w-36 rounded-md border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+              />
+              <Button
+                size="sm"
+                onClick={handleSaveTarget}
+                disabled={saving}
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                {saving ? "Saving..." : "Save"}
+              </Button>
+            </div>
+            <p
+              className={`text-xs mt-1.5 ${msg === "Saved!" ? "text-green-600" : msg ? "text-red-600" : "text-gray-500"
+                }`}
+            >
+              {msg || "Leave empty to get alerts on any price drop"}
+            </p>
+          </div>
+        )}
       </CardContent>
 
       {showChart && (
