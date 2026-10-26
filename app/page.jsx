@@ -1,6 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
 import { getProducts } from "./actions";
-import { TrendingDown,LogIn ,Rabbit ,Shield, Bell} from "lucide-react"; // agar tum Lucide icons use kar rahe ho
+import { TrendingDown, LogIn, Rabbit, Shield, Bell } from "lucide-react"; // agar tum Lucide icons use kar rahe ho
 import AddProductForm from "@/components/AddProductForm";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -14,7 +14,7 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const products=user ? await getProducts() : [];
+  const products = user ? await getProducts() : [];
 
   const FEATURES = [
     {
@@ -36,40 +36,49 @@ export default async function Home() {
     },
   ];
 
-  return ( 
-  <main className="min-h-screen bg-linear-to-br from-orange-50 via-white to-orange-50 dark:from-orange-950/20 dark:via-background dark:to-orange-950/20">
-    <header className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
-      <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <Image src={"/deal-drop-logo.png"} alt="Deal Drop Logo"
-            width={600}
-           height={200}
-           className="h-10 w-auto"
-          />
-      
+  return (
+    <main className="min-h-screen bg-linear-to-br from-orange-50 via-white to-orange-50 dark:from-orange-950/20 dark:via-background dark:to-orange-950/20">
+      <header className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <Image
+  src="/deal-drop-logo-light.png"
+  alt="Deal Drop Logo"
+  width={600}
+  height={200}
+  className="h-10 w-auto dark:hidden"
+/>
+<Image
+  src="/deal-drop-logo-dark.png"
+  alt="Deal Drop Logo"
+  width={600}
+  height={200}
+  className="h-10 w-auto hidden dark:block"
+/>
+
+          </div>
+
+          {/* Auth Button */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <AuthButton user={user} />
+          </div>
         </div>
+      </header>
+      <section className="py-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
 
-        {/* Auth Button */}
-         <div className="flex items-center gap-2">
-  <ThemeToggle />
-  <AuthButton user={user} />
-</div>
-      </div>
-    </header>
-    <section className="py-20 px-4">
-      <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-5xl font-bold text-foreground mb-4 tracking-tight">Never Miss a Price Drop</h2>
 
-        <h2 className="text-5xl font-bold text-foreground mb-4 tracking-tight">Never Miss a Price Drop</h2>
-
-        <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
             Track prices from any e-commerce site. Get instant alerts when
             prices drop. Save money effortlessly.
           </p>
 
           {/* Add Product Form */}
-           <AddProductForm user={user} />
-           {/* Features */}
-           {products.length === 0 && (
+          <AddProductForm user={user} />
+          {/* Features */}
+          {products.length === 0 && (
             <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-16">
               {FEATURES.map(({ icon: Icon, title, description }) => (
                 <div
@@ -83,12 +92,12 @@ export default async function Home() {
                   <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
               ))}
-      </div>
-      )}
-      </div>
+            </div>
+          )}
+        </div>
       </section>
 
-       {/* Products Grid */}
+      {/* Products Grid */}
       {user && products.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 pb-20">
           <div className="flex items-center justify-between mb-6">
@@ -109,7 +118,7 @@ export default async function Home() {
       )}
 
 
-       {/* Empty State */}
+      {/* Empty State */}
       {user && products.length === 0 && (
         <section className="max-w-2xl mx-auto px-4 pb-20 text-center">
           <div className="bg-card rounded-xl border-2 border-dashed border-border p-12">
@@ -123,6 +132,6 @@ export default async function Home() {
           </div>
         </section>
       )}
-  </main>
-);
+    </main>
+  );
 }
