@@ -64,7 +64,7 @@ export default function ProductCard({ product }) {
           )}
 
           <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-gray-900 line-clamp-2 mb-2">
+            <h3 className="font-semibold text-foreground line-clamp-2 mb-2">
               {product.name}
             </h3>
 
@@ -126,7 +126,7 @@ export default function ProductCard({ product }) {
             size="sm"
             onClick={handleDelete}
             disabled={deleting}
-            className="text-red-600 hover:text-red-700 hover:bg-red-50 gap-1"
+            className="text-red-600 hover:text-red-700 hover:bg-red-500/10 gap-1"
           >
             <Trash2 className="w-4 h-4" />
             Remove
@@ -143,7 +143,7 @@ export default function ProductCard({ product }) {
                 value={target}
                 onChange={(e) => setTarget(e.target.value)}
                 placeholder="Target price"
-                className="w-36 rounded-md border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+                className="w-36 rounded-md border border-border bg-background text-foreground px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
               <Button
                 size="sm"
@@ -155,7 +155,7 @@ export default function ProductCard({ product }) {
               </Button>
             </div>
             <p
-              className={`text-xs mt-1.5 ${msg === "Saved!" ? "text-green-600" : msg ? "text-red-600" : "text-gray-500"
+              className={`text-xs mt-1.5 ${msg === "Saved!" ? "text-green-600" : msg ? "text-red-600" : "text-muted-foreground"
                 }`}
             >
               {msg || "Leave empty to get alerts on any price drop"}

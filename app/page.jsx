@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import ProductCard from "@/components/ProductCard";
 import AuthButton from "@/components/AuthButton";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -36,8 +37,8 @@ export default async function Home() {
   ];
 
   return ( 
-  <main className="min-h-screen bg-linear-to-br from-orange-50 via-white to-orange-50">
-    <header className="bg-white/80 blackdrop-blur-sm border-b border-gray-200 sticky top-0 z-10">
+  <main className="min-h-screen bg-linear-to-br from-orange-50 via-white to-orange-50 dark:from-orange-950/20 dark:via-background dark:to-orange-950/20">
+    <header className="bg-background/80 backdrop-blur-sm border-b border-border sticky top-0 z-10">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <Image src={"/deal-drop-logo.png"} alt="Deal Drop Logo"
@@ -49,15 +50,18 @@ export default async function Home() {
         </div>
 
         {/* Auth Button */}
-         <AuthButton user={user} />
+         <div className="flex items-center gap-2">
+  <ThemeToggle />
+  <AuthButton user={user} />
+</div>
       </div>
     </header>
     <section className="py-20 px-4">
       <div className="max-w-7xl mx-auto text-center">
 
-        <h2 className="text-5xl font-bold text-gray-900 mb-4 tracking-tight">Never Miss a Price Drop</h2>
+        <h2 className="text-5xl font-bold text-foreground mb-4 tracking-tight">Never Miss a Price Drop</h2>
 
-        <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+        <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
             Track prices from any e-commerce site. Get instant alerts when
             prices drop. Save money effortlessly.
           </p>
@@ -70,13 +74,13 @@ export default async function Home() {
               {FEATURES.map(({ icon: Icon, title, description }) => (
                 <div
                   key={title}
-                  className="bg-white p-6 rounded-xl border border-gray-200"
+                  className="bg-card p-6 rounded-xl border border-border"
                 >
-                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  <div className="w-12 h-12 bg-orange-100 dark:bg-orange-500/20 rounded-lg flex items-center justify-center mb-4 mx-auto">
                     <Icon className="w-6 h-6 text-orange-500" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
-                  <p className="text-sm text-gray-600">{description}</p>
+                  <h3 className="font-semibold text-foreground mb-2">{title}</h3>
+                  <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
               ))}
       </div>
@@ -88,10 +92,10 @@ export default async function Home() {
       {user && products.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 pb-20">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-2xl font-bold text-gray-900">
+            <h3 className="text-2xl font-bold text-foreground">
               Your Tracked Products
             </h3>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-muted-foreground">
               {products.length} {products.length === 1 ? "product" : "products"}
             </span>
           </div>
@@ -108,12 +112,12 @@ export default async function Home() {
        {/* Empty State */}
       {user && products.length === 0 && (
         <section className="max-w-2xl mx-auto px-4 pb-20 text-center">
-          <div className="bg-white rounded-xl border-2 border-dashed border-gray-300 p-12">
-            <TrendingDown className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+          <div className="bg-card rounded-xl border-2 border-dashed border-border p-12">
+            <TrendingDown className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-foreground mb-2">
               No products yet
             </h3>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Add your first product above to start tracking prices!
             </p>
           </div>
